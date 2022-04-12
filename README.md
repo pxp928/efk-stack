@@ -1,3 +1,1 @@
-# elk-stack
-
-Work In Progress
+# efk-stack

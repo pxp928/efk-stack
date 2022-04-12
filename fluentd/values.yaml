@@ -1,4 +1,0 @@
-fluentd:
-   enabled: true
-   elasticsearch:
-     hostname: elasticsearch-master

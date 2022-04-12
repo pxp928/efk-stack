@@ -12,14 +12,17 @@ wait_for_pods () {
   kubectl wait --timeout=5m --for=condition=ready pods -l app="$2" -n "$1"
 }
 
+helm repo add fluent https://fluent.github.io/helm-charts
+helm repo add elastic https://helm.elastic.co
+
 # Install Elastic
 helm install elasticsearch elastic/elasticsearch -f ./elastic/values.yaml
 
 # Wait for Elastic
 wait_for_pods default elasticsearch-master
 
-# Install filebeat
-helm install filebeat elastic/filebeat
+# Install fluent-bit
+helm install fluent-bit fluent/fluent-bit
 
 # Install Kibana
 helm install kibana elastic/kibana
