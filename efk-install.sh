@@ -26,3 +26,6 @@ helm install fluent-bit fluent/fluent-bit
 
 # Install Kibana
 helm install kibana elastic/kibana
+
+# Wait for Kibana
+wait_for_pods default kibana
