@@ -10,7 +10,7 @@ minimumMasterNodes: 1
 
 # Request smaller persistent volumes.
 volumeClaimTemplate:
-  accessModes: [ "ReadWriteOnce" ]
+  accessModes: ["ReadWriteOnce"]
   resources:
     requests:
       storage: 100M

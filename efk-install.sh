@@ -6,6 +6,8 @@ C_YELLOW='\033[33m'
 C_GREEN='\033[32m'
 C_RESET_ALL='\033[0m'
 
+GIT_ROOT=$(git rev-parse --show-toplevel)
+
 # Wait until pods are ready.
 # $1: namespace, $2: app label
 wait_for_pods () {
@@ -18,20 +20,21 @@ helm repo add elastic https://helm.elastic.co
 
 # Install Elastic
 echo -e "${C_GREEN}Installing Elastic...${C_RESET_ALL}"
-helm install elasticsearch elastic/elasticsearch -f ./elastic/values.yaml
+helm install elasticsearch --create-namespace -n logging elastic/elasticsearch -f "$GIT_ROOT"/elastic/values.yaml
 
 # Wait for Elastic
-echo -e "${C_GREEN}Waiting for Elastic...${C_RESET_ALL}"
-wait_for_pods default elasticsearch-master
+wait_for_pods logging elasticsearch-master
 
 # Install fluent-bit
 echo -e "${C_GREEN}Installing fluent-bit...${C_RESET_ALL}"
-helm install fluent-bit fluent/fluent-bit
+helm install fluent-bit --create-namespace -n logging fluent/fluent-bit
 
 # Install Kibana
 echo -e "${C_GREEN}Installing kibana...${C_RESET_ALL}"
-helm install kibana elastic/kibana
+helm install kibana --create-namespace -n logging elastic/kibana
 
 # Wait for Kibana
-echo -e "${C_GREEN}Waiting for Kibana...${C_RESET_ALL}"
-wait_for_pods default kibana
+wait_for_pods logging kibana
+
+# To visualize Kibana port-forward 5601 and navigate to localhost:5601
+# kubectl port-forward -n logging deployment/kibana-kibana 5601
